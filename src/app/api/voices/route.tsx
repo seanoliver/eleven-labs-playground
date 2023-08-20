@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function POST() {
 
     try {
         const response = await fetch('https://api.elevenlabs.io/v1/voices', {
@@ -19,7 +19,7 @@ export async function GET() {
 
         return NextResponse.json(data);
     } catch (error) {
-        console.error(`Failed to get voices: ${error}`);
+        console.error(`Failed to get models: ${error}`);
         throw error;  // Important to throw if you want to propagate error to the caller
     }
     }

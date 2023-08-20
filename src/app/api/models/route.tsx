@@ -20,6 +20,6 @@ export async function GET() {
         return NextResponse.json(data);
     } catch (error) {
         console.error(`Failed to get models: ${error}`);
-        throw error;  // Important to throw if you want to propagate error to the caller
+        throw error;  // Propagate error to the caller
     }
     }
