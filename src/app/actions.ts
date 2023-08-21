@@ -1,5 +1,9 @@
 'use server';
 
+const fs = require('fs');
+const path = require('path');
+const uniqueId = Date.now().toString(36) + Math.random().toString(36);
+
 const XI_BASE_URL = 'https://api.elevenlabs.io/v1';
 
 export async function getModels() {
@@ -72,18 +76,20 @@ export async function getAudio(
 				}),
 			}
 		);
-
 		if (!response.ok) {
 			throw new Error(`Server responded with HTTP ${response.status}`);
 		}
-    console.log(response.headers.get('content-type'));
-
 
 		const blob = await response.blob();
 
-		return blob;
+		// Convert the blob to a buffer
+		const buffer = Buffer.from(await blob.arrayBuffer());
+		fs.writeFileSync(path.resolve(__dirname, `../audio/${uniqueId}.mp3`), buffer);
+
+		return true;
+
 	} catch (error) {
-		console.error(`Failed to get voices: ${error}`);
+		console.error(`Failed to get models: ${error}`);
 		throw error; // Propagate error to the caller
 	}
 }

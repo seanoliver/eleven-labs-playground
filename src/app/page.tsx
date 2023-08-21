@@ -1,12 +1,12 @@
 'use client';
 
-import { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { getAudio, getModels, getVoices } from './actions';
 
 export default function Home() {
 	const [models, setModels] = useState([]) as any[];
 	const [voices, setVoices] = useState([]) as any[];
-	const [audio, setAudio] = useState([]) as any;
+	const [audio, setAudio] = useState(false);
 	const audioRef = useRef<HTMLAudioElement>(null);
 
 	useEffect(() => {
@@ -38,39 +38,10 @@ export default function Home() {
 			const response = await getAudio(
 				'This is a test of Eleven Labs text to speech API'
 			);
-			console.log(response);
-			const audioUrl = URL.createObjectURL(response);
-			if (audioRef.current) {
-				audioRef.current.src = audioUrl;
-			}
+			setAudio(response);
 		};
 		fetchAudio();
 	}, []);
-
-	// useEffect(() => {
-	//     const fetchAudio = async () => {
-	//         try {
-	//             const response = await fetch('/api/tts', {
-	//                 method: 'POST',
-	//                 body: JSON.stringify({
-	//                     text: 'This is a test of Eleven Labs text to speech API',
-	//                     }),
-	//               })
-
-	//             if (!response.ok) throw new Error(response.statusText)
-	//             const fetchedAudio = await response.json();
-	//             const audioUrl = URL.createObjectURL(fetchedAudio.blob);
-	//             if (audioRef.current) {
-	//               audioRef.current.src = audioUrl;
-	//             }
-	//         } catch (error) {
-	//             console.error(`Failed to fetch audio: ${error}`);
-	//         }
-	//     };
-	//     fetchAudio();
-	// }, []);
-
-	// TODO: Convert API Routes to Next.js Server Actions
 
 	return (
 		<div className='container'>
@@ -90,13 +61,9 @@ export default function Home() {
 							<p>{voice.description}</p>
 						</div>
 					))}
-				{audioRef && (
-					<audio
-						controls
-						ref={audioRef}
-					/>
-				)}
+				{audio && 'Audio is ready'}
 			</main>
 		</div>
 	);
 }
+
